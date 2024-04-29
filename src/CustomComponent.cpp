@@ -29,25 +29,25 @@ void CustomComponent::loginWindow()
     ImGui::SetWindowPos(componentPos_);
     ImGui::SetWindowSize(componentSize_);
 
-    ImGui::InputText("Username", loginBuf_, IM_ARRAYSIZE(loginBuf_));
-    ImGui::InputText("Database path", dbPathBuf_, IM_ARRAYSIZE(dbPathBuf_));
-    ImGui::InputText("CSV path", csvPathBuf_, IM_ARRAYSIZE(csvPathBuf_));
+    ImGui::InputText("Имя", loginBuf_, IM_ARRAYSIZE(loginBuf_));
+    ImGui::InputText("Путь до базы данных", dbPathBuf_, IM_ARRAYSIZE(dbPathBuf_));
+    ImGui::InputText("Путь до CSV файла", csvPathBuf_, IM_ARRAYSIZE(csvPathBuf_));
 
-    if (ImGui::Button("Login"))
+    if (ImGui::Button("Войти"))
     {
         fs::path tmpCsvPath(csvPathBuf_);
         fs::path tmpDbPath(dbPathBuf_);
         if (!std::filesystem::exists(tmpCsvPath))
         {
-            loginWindowError_ = "CSV file not found!";
+            loginWindowError_ = "CSV файл не найден!";
         }
         else if (!std::filesystem::exists(tmpDbPath))
         {
-            loginWindowError_ = "Database file not found!";
+            loginWindowError_ = "Файл БД не найден!";
         }
         else if ( loginBuf_ == "" )
         {
-            loginWindowError_ = "Login not correct!";
+            loginWindowError_ = "Некорректное имя пользователя!";
         }
         else
         {
@@ -78,18 +78,18 @@ void CustomComponent::mainWindow()
 
     if (ImGui::BeginChild("Info", {componentSize_.x - 20, 120}, true))
     {
-        ImGui::LabelText("Username", "%s", login_.c_str());
+        ImGui::LabelText("Имя", "%s", login_.c_str());
         ImGui::Separator();
-        ImGui::LabelText("Database path", "%s", dbPath_.c_str());
+        ImGui::LabelText("Путь до базы данных", "%s", dbPath_.c_str());
         ImGui::Separator();
-        ImGui::LabelText("CSV path", "%s", csvPath_.c_str());
+        ImGui::LabelText("Путь до CSV файла", "%s", csvPath_.c_str());
         ImGui::EndChild();
     }
     if ( ImGui::BeginChild("Source", {componentSize_.x - 20, componentSize_.y - 250}, true) )
     {
         if ( !inputInfo_.empty() )
         {
-            ImGui::LabelText("Artist", "%s", inputInfo_.front().at(1).c_str());
+            ImGui::LabelText("Артист", "%s", inputInfo_.front().at(1).c_str());
             ImGui::Separator();
             ImGui::InputTextMultiline("##Text1", 
                 (char*)inputInfo_.front().at(2).c_str(), 
@@ -101,10 +101,10 @@ void CustomComponent::mainWindow()
             if ( inputInfo_.front().at(2).size() < 150 )
             {
                 ImGui::PushStyleColor(ImGuiCol_Text, {0.99, 0.93, 0, 1});
-                ImGui::Text( "%s", std::string("Number of characters => " + std::to_string(inputInfo_.front().at(2).size()) + "( < 150 )").c_str());
+                ImGui::Text( "%s", std::string("Количество символов => " + std::to_string(inputInfo_.front().at(2).size()) + "( < 150 )").c_str());
                 ImGui::PopStyleColor();
             }
-            else ImGui::Text( "%s", std::string("Number of characters => " + std::to_string(inputInfo_.front().at(2).size())).c_str());
+            else ImGui::Text( "%s", std::string("Количество символов => " + std::to_string(inputInfo_.front().at(2).size())).c_str());
         }
         else ImGui::Text("Конец файла");
         ImGui::EndChild();
@@ -122,7 +122,7 @@ void CustomComponent::mainWindow()
         writeToDatabase(false);
     }
     ImGui::Columns(1);
-    if (ImGui::Button("Logout", {componentSize_.x - 20, 30}))
+    if (ImGui::Button("Выйти", {componentSize_.x - 20, 30}))
     {
         while (!inputInfo_.empty())
         {
@@ -171,7 +171,7 @@ void CustomComponent::getInfoFromCSV()
         }
         else
         {
-            ImGui::LabelText("", "File not open");
+            ImGui::LabelText("", "Файл не найден");
         }
         input.close();
     }
@@ -204,14 +204,14 @@ void CustomComponent::writeToDatabase(bool textCharacter)
         }
         else
         {
-            dbError_ = "Error with execute query!";
+            dbError_ = "Ошибка выполнения запроса к БД!";
             std::cout << err << std::endl;
         }
         sqlite3_close(db);
     }
     else
     {
-        dbError_ = "Error with open database!";
+        dbError_ = "Файл БД не найден!";
         std::cout<<tmp<<std::endl;
     }
 }
